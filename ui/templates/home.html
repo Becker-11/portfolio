@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rowan Becker – Portfolio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Rowan Becker</h1>
+    <nav>
+      <a href="/">Home</a> |
+      <a href="/research">AI Safety Papers</a> |
+      <a href="#projects">Projects</a> |
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>Hi, I’m Rowan—a physics & CS honours grad with a passion for AI safety, scientific computing, and web development. Welcome to my portfolio!</p>
+  </section>
+
+  <section id="projects">
+    <h2>Selected Projects</h2>
+    <ul>
+      <li><strong>AI Safety Aggregator</strong>: A Python‑powered scraper & summarizer for the latest AI‑safety research. <a href="/research">Check it out →</a></li>
+      <li><strong>PINN Solver</strong>: A Physics‑Informed Neural Network for diffusion modelling in Nb cavities.</li>
+      <li><strong>Portfolio Website</strong>: Built with Flask, Jinja, and Tailwind CSS, deployed on Vercel.</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:rowan@rowanbecker.com">rowan@rowanbecker.com</a></p>
+    <p>GitHub: <a href="https://github.com/rowanbecker" target="_blank">github.com/rowanbecker</a></p>
+  </section>
+
+  <footer>
+    <p>© 2025 Rowan Becker</p>
+  </footer>
+</body>
+</html>

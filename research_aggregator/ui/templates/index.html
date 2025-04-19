@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Safety Research Aggregator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* you can override or extend your main styles here */
+    body { padding: 1rem; max-width: 800px; margin: auto; }
+    header { text-align: center; margin-bottom: 2rem; }
+    .paper { margin-bottom: 2rem; }
+    .paper h2 { margin-bottom: 0.3rem; }
+    .paper .date { font-size: 0.9em; color: #666; }
+    .summary { margin: 0.5rem 0; }
+    .keywords { font-size: 0.9em; color: #333; }
+    nav a { text-decoration: none; color: #0077cc; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AI Safety Research</h1>
+    <nav><a href="{{ url_for('home') }}">← Back to Portfolio</a></nav>
+  </header>
+
+  <main>
+    {% if papers %}
+      {% for paper in papers %}
+        <article class="paper">
+          <h2>
+            <a href="{{ paper.url }}" target="_blank">
+              {{ paper.id }} – {{ paper.title }}
+            </a>
+          </h2>
+          <div class="date">Published: {{ paper.published.strftime("%Y‑%m‑%d") }}</div>
+          {% if paper.summary %}
+            <p class="summary">{{ paper.summary }}</p>
+          {% endif %}
+          {% if paper.keywords %}
+            <p class="keywords">
+              <strong>Keywords:</strong> {{ paper.keywords }}
+            </p>
+          {% endif %}
+        </article>
+        <hr>
+      {% endfor %}
+    {% else %}
+      <p>No papers found. Try running the scheduler to fetch the latest AI‑safety research!</p>
+    {% endif %}
+  </main>
+</body>
+</html>

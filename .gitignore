@@ -1,0 +1,26 @@
+.vercel
+# .gitignore (place at the root of your repo)
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Local environment files
+.env
+.venv/
+venv/
+
+# SQLite files (if any remain)
+*.db
+*.sqlite
+
+# Data dumps & caches
+research_aggregator/data/
+ui/static/data.json
+
+# Vercel & build artifacts
+.vercel/
+build/
+
+# OS files
+.DS_Store

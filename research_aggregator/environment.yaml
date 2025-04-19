@@ -1,0 +1,32 @@
+name: AI_Research
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  - numpy < 2
+  - pip
+  - pyyaml
+  - sqlalchemy
+  - spacy
+  - pip:
+      - arxiv
+      - feedparser
+      - newspaper3k
+      - transformers
+      - torch
+      - apscheduler
+      - Flask
+      - FastAPI
+      - uvicorn
+      - PyYAML
+      - PyGithub
+      - tweepy
+      - keybert
+      - sentence-transformers
+      - beautifulsoup4
+      - lxml
+      - psycopg2-binary
+      - python-dotenv
+

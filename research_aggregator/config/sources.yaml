@@ -1,0 +1,37 @@
+arxiv:
+  library: arxiv
+  categories:
+    - cs.AI
+    - cs.LG
+  keywords:
+    - safety
+    - alignment
+
+rss:
+  - name: AI Alignment Forum
+    url: https://www.alignmentforum.org/feed.xml
+  - name: LessWrong
+    url: https://www.lesswrong.com/feed
+  - name: Distill
+    url: https://distill.pub/rss.xml
+
+twitter:
+  bearer_token: YOUR_TWITTER_BEARER_TOKEN
+  accounts:
+    - OpenAI
+    - mkoz
+  hashtags:
+    - AISafety
+    - alignment
+
+github:
+  token: YOUR_GITHUB_TOKEN
+  topics:
+    - safety
+    - alignment
+
+news:
+  - name: The Gradient
+    rss: https://thegradient.pub/rss
+  - name: Wired AI Ethics
+    rss: https://www.wired.com/feed/category/ai-and-ethics/rss

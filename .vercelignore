@@ -1,0 +1,17 @@
+# Root‑anchored ignore
+/research_aggregator/data/
+/research_aggregator/data/**
+
+# Any stray DB files
+/**/*.db
+/**/*.sqlite
+
+# Don’t need ingestion, summarization, scheduler, or your Conda specs at runtime
+/research_aggregator/ingest/
+/research_aggregator/summarize/
+/research_aggregator/scheduler.py
+/research_aggregator/environment.yaml
+
+# Python caches
+__pycache__/
+*.pyc
