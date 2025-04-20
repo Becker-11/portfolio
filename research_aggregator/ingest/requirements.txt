@@ -4,3 +4,6 @@ SQLAlchemy
 python-dotenv
 transformers
 keybert
+psycopg2-binary
+torch
+sentence-transformers
