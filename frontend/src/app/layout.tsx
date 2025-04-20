@@ -1,26 +1,27 @@
-// frontend/src/app/layout.tsx
-import './globals.css';
+import "./globals.css";
+import React, { ReactNode } from "react";
 
-// app/layout.tsx
-import React from 'react';
-import { ReactNode } from 'react';
-
-const Layout = ({ children }: { children: ReactNode }) => {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
-        <title>AI Safety Research</title>
-        {/* Other meta tags can go here */}
+        <title>Rowan Becker • Portfolio</title>
+        {/* meta / favicon */}
       </head>
-      <body>
-        <header>
-          <h1>Welcome to AI Safety Research</h1>
-          {/* Add navigation or any global layout elements here */}
-        </header>
-        <main>{children}</main>
+
+      {/* 1) full‑height flex column keeps footer at bottom
+          2) bg‑black guarantees no white flash anywhere */}
+      <body className="min-h-screen flex flex-col bg-black text-zinc-50">
+
+        {/* ----- global nav, banner, etc. could go here ----- */}
+
+        {/* 3) this wrapper gets the scrolling, not <body> */}
+        <div className="flex-1 overflow-y-auto">
+          {children}
+        </div>
+
+        {/* ----- global footer can live here, if desired ----- */}
       </body>
     </html>
-  )
+  );
 }
-
-export default Layout
