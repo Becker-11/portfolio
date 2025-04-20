@@ -1,1 +1,17 @@
-!**
+# ---------- completely ignore big junk ----------
+node_modules/
+.vscode/
+.git/
+*.log
+
+# ---------- ALWAYS KEEP these ----------
+!.next
+# !.next/**
+!public
+!public/**
+!src
+!src/**
+!package.json
+!package-lock.json
+!yarn.lock
+!next.config.*
