@@ -6,9 +6,9 @@ export default function Footer() {
     <footer className="border-t border-zinc-800 bg-black py-6 text-sm text-zinc-400">
       <div className="mx-auto max-w-4xl px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex gap-4">
-          <Link href="https://github.com/rowan" target="_blank" className="hover:text-zinc-50">GitHub</Link>
-          <Link href="https://twitter.com/rowan" target="_blank" className="hover:text-zinc-50">Twitter</Link>
-          <Link href="https://www.linkedin.com/in/rowan" target="_blank" className="hover:text-zinc-50">LinkedIn</Link>
+          <Link href="https://github.com/Becker-11" target="_blank" className="hover:text-zinc-50">GitHub</Link>
+          {/* <Link href="https://twitter.com/rowan" target="_blank" className="hover:text-zinc-50">Twitter</Link> */}
+          <Link href="https://www.linkedin.com/in/rowan-becker-029223117/" target="_blank" className="hover:text-zinc-50">LinkedIn</Link>
         </div>
         <Link
           href="/Rowan_Meronek_CV.pdf"

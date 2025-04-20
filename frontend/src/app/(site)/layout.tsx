@@ -16,7 +16,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         <NavBar />
 
         {/* Main content area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pt-14">
           {children}
         </div>
 

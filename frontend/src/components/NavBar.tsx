@@ -5,10 +5,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const navLinks = [
-  { label: "Projects", href: "#projects" },
+  { label: "Projects", href: "/projects" },
+  { label: "Content Recommendations", href: "/recommendations" },
+  { label: "About", href: "/about" },
   { label: "AI Safety Research", href: "/research" },
-  { label: "Content Recommendations", href: "#recommendations" },
-  { label: "Get to know me", href: "#about" },
 ];
 
 export default function Navbar() {
@@ -30,7 +30,7 @@ export default function Navbar() {
           ))}
         </nav>
         <Link
-          href="mailto:rowan@example.com"
+          href="mailto:rowan1103@gmail.com"
           className="inline-flex items-center gap-1 rounded-full border border-sky-500/40 px-4 py-1.5 text-sm text-sky-300 hover:bg-sky-500/10"
         >
           Get in touch <ArrowRight className="h-4 w-4" />
