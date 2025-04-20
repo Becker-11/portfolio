@@ -1,8 +1,17 @@
 # ingest/arxiv_fetcher.py
 
+
 import os
 import warnings
 from transformers import logging as hf_logging
+
+import sys
+from pathlib import Path
+
+# ── make the project root importable ────────────────────────────────────────
+# this ensures `summarize` (and db/, config/, etc.) are on Python’s path
+ROOT = Path(__file__).resolve().parents[1]  # points to research_aggregator/
+sys.path.insert(0, str(ROOT))
 
 # 1) Only show real errors from transformers
 hf_logging.set_verbosity_error()
