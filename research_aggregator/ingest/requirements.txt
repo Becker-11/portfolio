@@ -3,3 +3,4 @@ PyYAML
 SQLAlchemy
 python-dotenv
 transformers
+keybert
