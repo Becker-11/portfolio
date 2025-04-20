@@ -1,3 +1,5 @@
 arxiv
 PyYAML
-supabase-py
+SQLAlchemy
+python-dotenv
+transformers
