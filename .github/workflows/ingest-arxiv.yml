@@ -24,7 +24,6 @@ jobs:
       - name: Run arXiv fetcher
         working-directory: research_aggregator/ingest
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          python arxiv_fetcher.py --max_results 20
-
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python arxiv_fetcher.py --max_results 20
