@@ -1,4 +1,4 @@
-numpy<2.0dea
+numpy<2.0
 arxiv
 PyYAML
 SQLAlchemy
