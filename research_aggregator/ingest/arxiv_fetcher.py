@@ -7,7 +7,7 @@ import warnings
 import argparse
 from pathlib import Path
 from typing import Dict, List
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
 from transformers import logging as hf_logging
@@ -15,10 +15,12 @@ import yaml
 import arxiv
 from supabase import create_client
 
+from .base import BaseFetcher
+
 # ──────────────────────────────────────────────────────────────────────────────
 #  Load .env (locally) then Supabase HTTP client
 # ──────────────────────────────────────────────────────────────────────────────
-load_dotenv()  # turn on if you have research_aggregator/.env
+load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
@@ -35,7 +37,7 @@ warnings.filterwarnings("ignore", message=".*torch.tensor.*", category=UserWarni
 # ──────────────────────────────────────────────────────────────────────────────
 #  Make your repo root importable so `summarize/` is visible
 # ──────────────────────────────────────────────────────────────────────────────
-ROOT = Path(__file__).resolve().parents[1]  # research_aggregator/
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from summarize.summarizer import enrich_paper
@@ -49,56 +51,50 @@ def load_sources() -> Dict:
         return yaml.safe_load(f)
 
 # ──────────────────────────────────────────────────────────────────────────────
-#  Fetch + debug print
+#  Fetcher class
 # ──────────────────────────────────────────────────────────────────────────────
-def fetch_arxiv(max_results: int) -> List[Dict]:
-    cfg   = load_sources().get("arxiv", {})
-    cats  = cfg.get("categories", [])
-    kws   = cfg.get("keywords", [])
+class ArxivFetcher(BaseFetcher):
+    def fetch_arxiv(self, max_results: int) -> List[Dict]:
+        cfg = load_sources().get("arxiv", {})
+        cats = cfg.get("categories", [])
+        kws = cfg.get("keywords", [])
 
-    cat_q = " OR ".join(f"cat:{c}" for c in cats)
-    ti_q  = " OR ".join(f"ti:{kw}"  for kw in kws)
-    abs_q = " OR ".join(f"abs:{kw}" for kw in kws)
-    kw_q  = f"({ti_q}) OR ({abs_q})" if kws else ""
+        cat_q = " OR ".join(f"cat:{c}" for c in cats)
+        ti_q  = " OR ".join(f"ti:{kw}"  for kw in kws)
+        abs_q = " OR ".join(f"abs:{kw}" for kw in kws)
+        kw_q  = f"({ti_q}) OR ({abs_q})" if kws else ""
 
-    #query = f"({cat_q}) AND ({kw_q})" if cat_q and kw_q else cat_q or kw_q
+        base_q = f"({cat_q}) AND ({kw_q})" if cat_q and kw_q else cat_q or kw_q
 
-    base_q = f"({cat_q}) AND ({kw_q})" if cat_q and kw_q else cat_q or kw_q
+        now = datetime.utcnow()
+        ago48 = now - timedelta(days=2)
+        r1 = ago48.strftime("%Y%m%d%H%M")
+        r2 = now.strftime("%Y%m%d%H%M")
+        date_q = f"lastUpdatedDate:[{r1} TO {r2}]"
 
-    # ── date‐range for last 48 hours ─────────────────────────────────────────
-    from datetime import datetime, timedelta
-    now = datetime.utcnow()
-    ago48 = now - timedelta(days=2)
-    # ArXiv wants YYYYMMDDhhmm (we’ll zero‐pad minutes/hours)
-    r1 = ago48.strftime("%Y%m%d%H%M")
-    r2 = now.strftime   ("%Y%m%d%H%M")
-    date_q = f"lastUpdatedDate:[{r1} TO {r2}]"
+        query = f"{base_q} AND ({date_q})"
+        print("🔍 ArXiv query string:", query)
 
-    query = f"{base_q} AND ({date_q})"
+        search = arxiv.Search(
+            query=query,
+            max_results=max_results,
+            sort_by=arxiv.SortCriterion.SubmittedDate,
+            sort_order=arxiv.SortOrder.Descending,
+        )
 
-    print("🔍 ArXiv query string:", query)
-
-    search = arxiv.Search(
-        query=query,
-        max_results=max_results,
-        sort_by=arxiv.SortCriterion.SubmittedDate,
-        sort_order=arxiv.SortOrder.Descending,
-    )
-
-    client = arxiv.Client()
-    results = []
-    for result in client.results(search):
-        print("  •", result.published.isoformat(), "→", result.title[:60] + "…")
-        results.append({
-            "id":        result.get_short_id(),
-            "title":     result.title,
-            "abstract":  result.summary,
-            "url":       result.pdf_url,
-            "published": result.published.isoformat(),
-        })
-    return results
-
-
+        client = arxiv.Client()
+        results = []
+        for result in client.results(search):
+            print("  •", result.published.isoformat(), "→", result.title[:60] + "…")
+            results.append({
+                "id":        result.get_short_id(),
+                "title":     result.title,
+                "abstract":  result.summary,
+                "url":       result.pdf_url,
+                "published": result.published.isoformat(),
+                "source":    "arxiv", 
+            })
+        return results
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Save via Supabase HTTP upsert
@@ -113,18 +109,10 @@ def save_papers(papers: List[Dict]):
             "published": p["published"],
             "summary":   p.get("summary", ""),
             "keywords":  ",".join(p.get("keywords", [])),
+            "source":    p.get("source", "unknown"),
         }).execute()
+    return None
 
-# ──────────────────────────────────────────────────────────────────────────────
-#  Orchestrator
-# ──────────────────────────────────────────────────────────────────────────────
-def process_papers(max_results: int):
-    raw      = fetch_arxiv(max_results)
-    enriched = [enrich_paper(p) for p in raw]
-    save_papers(enriched)
-    print(f"\n✅  Processed {len(enriched)} papers:")
-    for p in enriched:
-        print(" •", p["id"], "-", p["title"])
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  CLI entrypoint
@@ -138,4 +126,4 @@ if __name__ == "__main__":
         help="How many of the most recent papers to pull (default: 10)"
     )
     args = parser.parse_args()
-    process_papers(max_results=args.max_results)
+
