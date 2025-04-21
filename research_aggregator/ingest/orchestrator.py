@@ -5,8 +5,8 @@ import argparse
 import traceback
 from typing import List, Type
 
-from base import BaseFetcher
-from arxiv_fetcher import ArxivFetcher
+from ingest.base import BaseFetcher
+from ingest.arxiv_fetcher import ArxivFetcher
 from summarize.summarizer import enrich_paper
 
 

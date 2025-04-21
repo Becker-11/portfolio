@@ -15,7 +15,7 @@ import yaml
 import arxiv
 from supabase import create_client
 
-from .base import BaseFetcher
+from ingest.base import BaseFetcher
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Load .env (locally) then Supabase HTTP client
@@ -54,7 +54,7 @@ def load_sources() -> Dict:
 #  Fetcher class
 # ──────────────────────────────────────────────────────────────────────────────
 class ArxivFetcher(BaseFetcher):
-    def fetch_arxiv(self, max_results: int) -> List[Dict]:
+    def fetch(self, max_results: int) -> List[Dict]:
         cfg = load_sources().get("arxiv", {})
         cats = cfg.get("categories", [])
         kws = cfg.get("keywords", [])
@@ -67,7 +67,7 @@ class ArxivFetcher(BaseFetcher):
         base_q = f"({cat_q}) AND ({kw_q})" if cat_q and kw_q else cat_q or kw_q
 
         now = datetime.utcnow()
-        ago48 = now - timedelta(days=2)
+        ago48 = now - timedelta(days=4)
         r1 = ago48.strftime("%Y%m%d%H%M")
         r2 = now.strftime("%Y%m%d%H%M")
         date_q = f"lastUpdatedDate:[{r1} TO {r2}]"
